@@ -1,0 +1,41 @@
+{
+  "summary": "Comprehensive backend E2E (32 tests, 100% pass) + mobile-viewport UI smoke covering: auth (3 roles), role guards (staff 403 on financial + product create), POS cash sale (inventory deduction + COGS + gross_profit + change), underpayment 400, percent discount, promo LEZATOSS10 (min-purchase enforcement), full QRIS simulator loop (pending -> paid -> deduct + 0.7% gateway_fee + idempotent second simulate, mismatch=422, expire=EXPIRED, retry-payment creates new pending), void restores inventory (delta-based, not double-voidable, staff forbidden), HPP recompute after ingredient cost PATCH, purchase increases stock and applies weighted-average cost, expense records, cash session open/tx/close (expected vs actual difference), reports/financial (net_sales - cogs = gross_profit; gross_profit - opex_total = net_profit), reports/sales shape, CSV export for all 6 types (pnl/sales/expenses/inventory/purchases/products), dashboard (kpis + 14d trend + low_stock + best_sellers). Frontend mobile smoke (375x667): login->dashboard KPIs (Rp507.000 sales, gross Rp193.207, net Rp118.207) -> Kasir tab -> add to cart -> cart shows total Rp30.000 -> QRIS payment opens modal with QR code, 30-min countdown, and simulator buttons (Bayar/Kedaluwarsa/Gagal). Zero console errors observed. Bottom tabs Beranda/Kasir/Pesanan/Lainnya all wired.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "PATCH /api/ingredients/{id}", "issue": "PATCH is semantically PUT — the IngredientIn schema requires name+unit+purchase_price+stock+min_stock; partial cost-only updates return 422. Consider making fields Optional and merging into existing doc so clients can send just {cost_per_unit} to trigger HPP recompute."},
+      {"endpoint": "GET /api/reports/financial", "issue": "P&L exposes opex as 'opex_total'; README/spec used 'opex'. Consider aliasing so frontend/report consumers can rely on a stable key."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_braders_e2e.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "(optional) Make PATCH /api/ingredients/{id} accept partial bodies (Optional fields) — currently forces frontend edit forms to resend full payload.",
+    "(optional) Rename or alias reports/financial 'opex_total' -> 'opex' to match spec vocabulary.",
+    "No blocking issues. Feature parity with problem statement is fully verified end-to-end."
+  ],
+  "critical_code_review_comments": [
+    "Idempotency of QRIS PAID path is correctly guarded: reconcile_payment early-returns when status already PAID and finalize_sale is gated by 'deducted' flag; verified via double-simulate test.",
+    "Void uses an atomic guard doc update (restored != true) before restoring stock — no double-restore; verified via second-void 400.",
+    "Weighted-average cost update on purchase verified numerically (cost moved from before_cost toward buy_price after +10 qty).",
+    "Simulator gateway is invoked via the real webhook path (signature+amount verification), so mismatch correctly returns 422 without any DB state change."
+  ],
+  "updated_files": [
+    "/app/backend/tests/__init__.py (new)",
+    "/app/backend/tests/test_braders_e2e.py (new — 32 pytest cases)"
+  ],
+  "success_rate": {"backend": "100% (32/32)", "frontend": "100% smoke (login, dashboard, POS add-to-cart, QRIS modal)"},
+  "seed_data_creation": "Used existing demo seed (settings.demo_mode=true). Tests created transient TEST_ tagged sales / one expense / one purchase / one cash session — nondestructive, cannot conflict with production data.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "All critical BRADERS flows are green. If retesting: run `cd /app/backend && python -m pytest tests/test_braders_e2e.py -o addopts='' -v` (the repo's pytest.ini enables xdist; passing -o addopts='' forces sequential run needed by the cash-session and stock-delta tests). External URL EXPO_PUBLIC_BACKEND_URL is used throughout. QRIS uses PAYMENT_SIMULATOR=true, so /api/payments/{id}/simulate?event=paid|expire|mismatch is the auth-authenticated route to complete/expire QRIS in tests.",
+  "rca_of_issue": "N/A — no bugs to root-cause. During test authoring the following API contract facts were discovered and matter for future callers: (1) /api/ingredients returns {items:[...]} not a bare list; (2) ingredient cost field is 'cost_per_unit' (not 'unit_cost'); (3) purchase payload uses date+supplier_name+items[{ingredient_id,qty,unit_price}]; (4) expense requires date (YYYY-MM-DD); (5) cash session open takes 'opening_cash' (not opening_balance); (6) cash transactions accept type in {'addition','withdrawal'}; (7) recipe is exposed on GET /api/products/{id} not on list view; (8) financial P&L exposes 'opex_total'."
+}

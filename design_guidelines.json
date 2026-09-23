@@ -1,0 +1,224 @@
+{
+  "app_name": "BRADERS - Churros Lezatoss POS & Business Management",
+  "personality": "4 Tactile / Playful LIGHT (Customized with Warm Cream, Brown, Golden Yellow, and White palette)",
+  "personality_one_liner": "A high-speed, touch-friendly, and delightful POS and business management app for the churros brand BRADERS with warm cream, brown, and golden yellow aesthetics.",
+  "color": {
+    "surface": "#FAF6ED",
+    "onSurface": "#2C1810",
+    "surfaceSecondary": "#F3EAD8",
+    "onSurfaceSecondary": "#3D2317",
+    "surfaceTertiary": "#E5D4B7",
+    "onSurfaceTertiary": "#4E2E1D",
+    "surfaceInverse": "#2C1810",
+    "onSurfaceInverse": "#FAF6ED",
+    "brand": "#D97706",
+    "brandPrimary": "#D97706",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#B45309",
+    "onBrandSecondary": "#FFFFFF",
+    "brandTertiary": "#FDE68A",
+    "onBrandTertiary": "#78350F",
+    "success": "#15803D",
+    "onSuccess": "#FFFFFF",
+    "warning": "#B45309",
+    "onWarning": "#FFFFFF",
+    "error": "#B91C1C",
+    "onError": "#FFFFFF",
+    "info": "#1D4ED8",
+    "onInfo": "#FFFFFF",
+    "border": "#E5D4B7",
+    "borderStrong": "#D97706",
+    "divider": "#EFE6D5",
+    "muted": "#78716C"
+  },
+  "typography": {
+    "displayFontFamily": "Plus Jakarta Sans",
+    "textFontFamily": "Plus Jakarta Sans",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Generous touch-friendly padding with comfortable vertical rhythm, compact 8px spacing for dense POS grids and 16px/24px padding for dashboards and forms.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 8,
+    "md": 14,
+    "lg": 22,
+    "pill": 999
+  },
+  "shadow_tier": "2",
+  "navigation": "bottom_tabs",
+  "icon_set": "Phosphor",
+  "glassmorphism": {
+    "enabled": true,
+    "do's": [
+      "Use translucent sticky headers and bottom cart sheets over scrolling content",
+      "Apply glass blur with warm cream tinted base for QRIS modal overlays"
+    ],
+    "dont's": [
+      "Never blur dense POS product grid cards or input fields"
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Dashboard",
+      "purpose": "Overview of today's sales, gross/net profit, expenses, cash balance, low stock alerts, and quick actions in Bahasa Indonesia.",
+      "states": {
+        "loading": "Centered warm spinner with logo badge",
+        "empty": "Illustration + 'Belum ada transaksi hari ini' + 'Mulai POS'",
+        "error": "Readable error message + 'Coba Lagi' button"
+      },
+      "layout": "Vertical scroll with top sticky header, greeting & shift status card, 2x2 KPI metric grid (Penjualan, Keuntungan, Pengeluaran, Kas), Sales & Profit trend interactive chart card, Low stock warning banner, and Quick Actions row."
+    },
+    {
+      "name": "POS / Kasir",
+      "purpose": "Lightning-fast cashier product grid, category tabs, cart management with quantity/discount/customer, change calculation, and QRIS QR code checkout.",
+      "states": {
+        "loading": "Skeleton product cards grid",
+        "empty": "Cart is empty illustration + 'Pilih produk churros di atas'",
+        "error": "Failed to sync order + 'Simpan Offline'"
+      },
+      "layout": "Split or tabbed view optimized for touch: left/top category pills and fast-scrolling product grid with real photo cards and price tags, bottom sticky slide-up cart sheet with discount, customer select, and QRIS/Cash checkout buttons."
+    },
+    {
+      "name": "Pesanan (Orders)",
+      "purpose": "Order history, receipt viewing, and void/cancel management with role restrictions.",
+      "states": {
+        "loading": "List skeleton items",
+        "empty": "No orders yet illustration + 'Belum ada riwayat pesanan'",
+        "error": "Error loading orders + 'Muat Ulang'"
+      },
+      "layout": "Filter tabs (Semua, Selesai, Dibatalkan), searchable list of order cards showing order ID, customer name, items summary, payment method badge (QRIS/Tunai), status, and action buttons for receipt reprint or void."
+    },
+    {
+      "name": "Produk & Resep (Products)",
+      "purpose": "Product catalogue CRUD, recipe BOM ingredients breakdown, and HPP (Harga Pokok Penjualan) estimate calculation.",
+      "states": {
+        "loading": "Skeleton product list",
+        "empty": "No products yet + 'Tambah Produk Pertama'",
+        "error": "Error loading products + 'Coba Lagi'"
+      },
+      "layout": "List of churros and drinks with thumbnail image, selling price, HPP cost, profit margin badge, and quick edit/recipe modal trigger."
+    },
+    {
+      "name": "Inventaris (Inventory)",
+      "purpose": "Ingredient stock tracking, min stock threshold, stock valuation, movement history, and low stock warnings.",
+      "states": {
+        "loading": "Skeleton rows",
+        "empty": "No inventory items + 'Tambah Bahan Baku'",
+        "error": "Error loading inventory + 'Coba Lagi'"
+      },
+      "layout": "Inventory dashboard summary (Total nilai stok, Barang kritis), searchable ingredient cards with stock status badge, current quantity vs min stock, and stock adjustment buttons."
+    },
+    {
+      "name": "Pembelian (Purchases)",
+      "purpose": "Record stock-in purchases from suppliers, ingredient costs, and purchase history.",
+      "states": {
+        "loading": "Skeleton list",
+        "empty": "No purchases recorded + 'Catat Pembelian Baru'",
+        "error": "Error fetching purchases + 'Coba Lagi'"
+      },
+      "layout": "Chronological list of purchase orders with supplier name, total cost, items received, and 'Tambah Pembelian' floating action button."
+    },
+    {
+      "name": "Pengeluaran (Expenses)",
+      "purpose": "Track operational expenses categorized by rent, utilities, staff pay, marketing, and raw materials.",
+      "states": {
+        "loading": "Skeleton expense cards",
+        "empty": "No expenses recorded + 'Catat Pengeluaran'",
+        "error": "Error loading expenses + 'Coba Lagi'"
+      },
+      "layout": "Monthly expense breakdown summary card, category filter pills, and list of expense items with date, amount in IDR, and receipt note."
+    },
+    {
+      "name": "Laporan Keuangan & Penjualan (Reports)",
+      "purpose": "Comprehensive financial statements (Revenue, COGS, Gross Profit, Opex, Net Profit) and sales analytics by best sellers, category, and hour.",
+      "states": {
+        "loading": "Chart and metric skeletons",
+        "empty": "No report data for selected date range",
+        "error": "Error generating report + 'Coba Lagi'"
+      },
+      "layout": "Date range picker filter header, financial summary cards, Profit & Loss statement breakdown, best sellers ranking list, and payment method distribution chart."
+    },
+    {
+      "name": "Marketing & Promosi (Marketing)",
+      "purpose": "Create and manage active promotions, discount vouchers, and loyalty programs for BRADERS customers.",
+      "states": {
+        "loading": "Skeleton promo cards",
+        "empty": "No active promotions + 'Buat Promo Baru'",
+        "error": "Error loading promotions + 'Coba Lagi'"
+      },
+      "layout": "List of active/expired promo discount cards with discount percentage, minimum purchase, validity period, and toggle switch."
+    },
+    {
+      "name": "Pelanggan (Customers)",
+      "purpose": "Customer database tracking total spending, visit frequency, and loyalty points for BRADERS fans.",
+      "states": {
+        "loading": "Skeleton customer rows",
+        "empty": "No customer records yet + 'Tambah Pelanggan'",
+        "error": "Error loading customers + 'Coba Lagi'"
+      },
+      "layout": "Searchable customer directory with avatar/initials, phone number, total spend in IDR, visit count, and loyalty tier badge."
+    },
+    {
+      "name": "Kasir Shift (Cash Register)",
+      "purpose": "Open and close shift management, recording expected vs actual cash in the register drawer.",
+      "states": {
+        "loading": "Loading shift status",
+        "empty": "Shift closed + 'Buka Shift Baru'",
+        "error": "Error loading shift info + 'Coba Lagi'"
+      },
+      "layout": "Shift status banner, opening cash input, cash in/out drawer transactions log, closing cash reconciliation form (expected vs actual cash difference calculation)."
+    },
+    {
+      "name": "Pengaturan & Pengguna (Settings)",
+      "purpose": "Business profile settings (BRADERS Churros Lezatoss), receipt printer config, tax/service fee settings, and User roles (Owner, Cashier, Staff).",
+      "states": {
+        "loading": "Skeleton settings form",
+        "empty": "No settings available",
+        "error": "Error loading settings + 'Coba Lagi'"
+      },
+      "layout": "Grouped settings sections (Profil Bisnis, Perangkat Kasir & Printer, Pengguna & Hak Akses dengan Role-based access), with toggle switches and save actions."
+    }
+  ],
+  "images": {
+    "hero_churros": {
+      "url": "https://images.unsplash.com/photo-1767489386700-cb3dbcbab13d",
+      "dark": "https://images.unsplash.com/photo-1767489386700-cb3dbcbab13d",
+      "alt": "Freshly made churros dusted with powdered sugar and chocolate dip"
+    },
+    "churros_box": {
+      "url": "https://images.pexels.com/photos/21792158/pexels-photo-21792158.jpeg",
+      "alt": "Close-up of hand holding churros with chocolate sauce in BRADERS packaging"
+    },
+    "churros_tray": {
+      "url": "https://images.pexels.com/photos/36361401/pexels-photo-36361401.jpeg",
+      "alt": "Tray of churros wrapped in paper with a bowl of chocolate sauce"
+    }
+  },
+  "instructions_to_main_agent": "Build the full-stack business management and POS application 'BRADERS' ('Churros Lezatoss') using React Native, Expo Router, and TypeScript. Adhere strictly to the warm cream (#FAF6ED), brown (#2C1810), golden yellow (#D97706), and white color palette. Ensure the POS cashier screen is extremely fast, responsive, and touch-optimized with category filters, a product grid with real photo cards, cart drawer with discount/customer selection, and an interactive QRIS checkout simulation with countdown and status polling. Implement all 12 core modules in Bahasa Indonesia with IDR Rupiah currency formatting. Ensure touch targets are >= 44x44pt and all screens include loading, empty, and error states. Use bottom navigation for mobile with clear icons."
+}
